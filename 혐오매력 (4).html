@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>혐오 매력</title>
+  <link rel="icon" type="image/png" href="썸네일.png">
+  <style>
+    * { cursor: none; }
+    body, h1, h2, h3, p { margin: 0; }
+    body {
+      background-color: #ffffff;
+      overflow-x: hidden;
+    }
+    .landing {
+      width: 100vw;
+      min-height: 100vh;
+      padding: 60px 0 0 60px;
+      position: relative;
+      box-sizing: border-box;
+    }
+    .bg-text-wrap {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 3;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .bg-row {
+      display: block;
+      font-family: 상상토끼 순악필여사 OTF;
+      font-weight: 300;
+      font-size: 30px;
+      color: #FF0000;
+      white-space: nowrap;
+      line-height: 1.3;
+      opacity: 1;
+      animation: wave 2.5s ease-in-out infinite;
+    }
+    @keyframes wave {
+      0%   { transform: translateY(0px); }
+      50%  { transform: translateY(-30px); }
+      100% { transform: translateY(0px); }
+    }
+    h1.title-main {
+      font-family: 상상토끼 순악필여사 OTF;
+      font-weight: 300;
+      font-size: 200px;
+      line-height: 0.95;
+      color: #FF0000;
+      letter-spacing: -2px;
+      position: relative;
+      z-index: 4;
+      background-color: #000000;
+      display: inline;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+      padding: 0 10px;
+    }
+    p.title-sub {
+      font-family: 지백 beta;
+      font-weight: 850;
+      font-size: 35px;
+      color: #FF0000;
+      line-height: 1;
+      margin-top: 8px;
+      position: relative;
+      z-index: 4;
+      background-color: #000000;
+      display: inline;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+      padding: 2px 8px;
+    }
+    #warning {
+      width: 100vw;
+      min-height: 100vh;
+      background: linear-gradient(to bottom, #000000 0%, #1a0000 40%, #FF0000 100%);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 80px;
+      box-sizing: border-box;
+    }
+    .warning-content { text-align: center; }
+    .warning-title {
+      font-family: SM3견출명조;
+      font-weight: 900;
+      font-size: 50px;
+      color: #FF0000;
+      line-height: 2;
+      margin: 0 0 60px 0;
+    }
+    .warning-text {
+      font-family: 지백 beta;
+      font-weight: 400;
+      font-size: 18px;
+      color: #ffffff;
+      line-height: 2;
+      letter-spacing: 0.05em;
+    }
+    #videoWrap {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 1;
+      overflow: hidden;
+    }
+    #acneVideo {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    #zoom-wrap {
+      position: absolute;
+      width: 500px; height: 500px;
+      overflow: hidden;
+      pointer-events: none;
+      display: none;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+    }
+    #acneVideoZoom {
+      position: absolute;
+      width: 700%;
+      transform: translate(var(--zx), var(--zy));
+    }
+    #custom-cursor {
+      position: fixed;
+      width: 20px; height: 20px;
+      background: #FFE600;
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 99999;
+      transition: width 0.15s ease, height 0.15s ease;
+    }
+    .popup-window {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9000;
+      border: 2px solid #cccccc;
+      box-shadow: 3px 3px 8px rgba(0,0,0,0.5);
+      background: #f0f0f0;
+      animation: popFade 1.2s ease-out forwards;
+      overflow: hidden;
+    }
+    .popup-titlebar {
+      background: linear-gradient(to right, #000080, #1084d0);
+      height: 22px;
+      display: flex;
+      align-items: center;
+      padding: 0 6px;
+      justify-content: space-between;
+    }
+    .popup-titlebar span {
+      color: white;
+      font-size: 11px;
+      font-family: Arial, sans-serif;
+    }
+    .popup-titlebar .close-btn {
+      background: #cc0000;
+      color: white;
+      font-size: 10px;
+      font-family: Arial;
+      width: 16px; height: 16px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid #880000;
+    }
+    .popup-window img {
+      display: block;
+      width: 100%;
+      height: calc(100% - 22px);
+      object-fit: cover;
+    }
+    @keyframes popFade {
+      0%   { opacity: 0; transform: scale(0.7); }
+      15%  { opacity: 1; transform: scale(1); }
+      75%  { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    #gallery-section { width: 100vw; background: #000; padding: 0; margin: 0; }
+    #gallery-grid { display: grid; grid-template-columns: repeat(5, 1fr); width: 100vw; gap: 0; }
+    .gallery-cell {
+      width: 100%; aspect-ratio: 1/1; overflow: hidden;
+      border: 0.5px solid rgba(255,255,255,0.08);
+      cursor: crosshair; position: relative;
+    }
+    .gallery-cell img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      filter: blur(14px) brightness(0.5);
+      transform: scale(1);
+      transition: filter 0.15s ease, transform 0.15s ease;
+    }
+    .gallery-cell:hover img {
+      filter: blur(0px) brightness(1.2) contrast(1.1);
+      transform: scale(1.25);
+      z-index: 10;
+    }
+    .gallery-cell.flash img {
+      filter: blur(0px) brightness(1.2);
+      transform: scale(1.08);
+    }
+    @keyframes flicker {
+      0%, 100% {
+        text-shadow: 0 0 10px #ffffff, 0 0 30px #ff0000, 0 0 60px #ff0000;
+      }
+      5% { text-shadow: none; }
+      10% {
+        text-shadow: 0 0 20px #ffffff, 0 0 50px #ff0000, 0 0 90px #ff0000;
+      }
+      15% {
+        text-shadow: 0 0 10px #ffffff, 0 0 30px #ff0000, 0 0 60px #ff0000;
+      }
+      50% {
+        text-shadow: 0 0 10px #ffffff, 0 0 30px #ff0000, 0 0 60px #ff0000;
+      }
+      52% { text-shadow: none; }
+      54% {
+        text-shadow: 0 0 10px #ffffff, 0 0 30px #ff0000, 0 0 60px #ff0000;
+      }
+    }
+
+    /* wall-section */
+    #wall-section {
+      width: 100vw;
+      position: relative;
+      overflow: hidden;
+    }
+    #pimple-wrap {
+      position: absolute;
+      top: 17.2%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      z-index: 8;
+      pointer-events: none;
+    }
+    #pop-bg-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 8px;
+    }
+    #pimple-overlay {
+      position: absolute;
+      top: 12%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 26%;
+      aspect-ratio: 1/1;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 32%,
+        #ffe8b0 0%, #f09040 28%, #cc3300 62%, #7a1500 100%);
+      box-shadow:
+        0 0 50px 18px rgba(220,120,20,0.5),
+        0 0 100px 35px rgba(220,80,10,0.25);
+      z-index: 9;
+      animation: pimplePop2 2s ease-in-out infinite;
+    }
+    @keyframes pimplePop2 {
+      0%   { transform: translateX(-50%) scale(1);    opacity: 1; }
+      55%  { transform: translateX(-50%) scale(1.22); opacity: 1; }
+      65%  { transform: translateX(-50%) scale(0.04); opacity: 0; }
+      66%  { transform: translateX(-50%) scale(0);    opacity: 0; }
+      90%  { transform: translateX(-50%) scale(0);    opacity: 0; }
+      100% { transform: translateX(-50%) scale(1);    opacity: 1; }
+    }
+    #pop-flash2 { display: none; }
+    #pop-canvas2 {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 15;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="custom-cursor"></div>
+
+  <div class="landing" id="landingSection">
+    <div id="videoWrap">
+      <video id="acneVideo" autoplay muted loop playsinline>
+        <source src="acne.mp4" type="video/mp4">
+      </video>
+      <div id="zoom-wrap">
+        <video id="acneVideoZoom" autoplay muted loop playsinline>
+          <source src="acne.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+    <div class="bg-text-wrap" id="bgTextWrap"></div>
+    <h1 class="title-main">혐오 매력,</h1>
+    <br>
+    <p class="title-sub">당신이 이러한 콘텐츠를 계속 보게 되는 이유….</p>
+  </div>
+
+  <section id="warning">
+    <div class="warning-content">
+      <h2 class="warning-title">경고<br>WARNING</h2>
+      <p class="warning-text">
+        징그럽고 혐오스러운 장면이 있으니 심약자는 주의 바랍니다.<br>
+        There is a scene that makes you feel sick and disgusted,<br>
+        so please be careful if you are weak in your heart.
+      </p>
+    </div>
+  </section>
+
+  <section id="gallery-section">
+    <div id="gallery-grid"></div>
+  </section>
+  <script src="gallery.js"></script>
+
+  <script>
+    setInterval(function() {
+      const cells = document.querySelectorAll('.gallery-cell');
+      if (!cells.length) return;
+      const count = Math.floor(Math.random() * 8) + 3;
+      for (let i = 0; i < count; i++) {
+        const cell = cells[Math.floor(Math.random() * cells.length)];
+        cell.classList.add('flash');
+        setTimeout(function() {
+          cell.classList.remove('flash');
+        }, Math.random() * 600 + 200);
+      }
+    }, 300);
+  </script>
+
+  <!-- wall-section -->
+  <section id="wall-section">
+    <img src="wall.png" alt="벽" style="width: 100%; height: auto; display: block;">
+
+    <div id="pimple-wrap">
+      <img id="pop-bg-img" src="이미지 3/-29.png" alt="여드름 단면">
+      <div id="pimple-overlay"></div>
+      <div id="pop-flash2"></div>
+    </div>
+
+    <canvas id="pop-canvas2"></canvas>
+
+    <!-- 텍스트 1 — 왼쪽 기울어진 질문들 -->
+    <div class="rotated-text-container" style="
+      position: absolute;
+      top: 2%;
+      left: 4%;
+      transform: rotate(-15deg);
+      transform-origin: left top;
+      font-family: 지백 beta;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    ">
+      <div style="background-color: #000000; color: #ffffff; padding: 10px 15px; font-size: 1.5rem; font-weight: 600;">
+        SNS, 릴스, 유튜브에 가끔 뜨는
+      </div>
+      <div style="background-color: #000000; color: #ffffff; padding: 10px 15px; font-size: 1.5rem; font-weight: 600;">
+        여드름 압출 영상,
+      </div>
+      <div style="background-color: #000000; color: #ffffff; padding: 10px 15px; font-size: 1.5rem; font-weight: 600;">
+        피지 제거 영상... 등에
+      </div>
+      <div style="background-color: #000000; color: #ffffff; padding: 10px 15px; font-size: 1.5rem; font-weight: 600;">
+        잠시 스크롤을 멈추고
+      </div>
+      <div style="background-color: #000000; color: #ffffff; padding: 10px 15px; font-size: 1.5rem; font-weight: 600; margin-top: 5px;">
+        끝까지 지켜본 적 없으신가요?
+      </div>
+      <br>
+      <div style="background-color: #000000; color: #ffffff; padding: 10px 15px; font-size: 1.8rem; font-weight: 600;">
+        중독적으로 뜨면 계속 보게 되지는 않으신가요?
+      </div>
+    </div>
+
+    <!-- 텍스트 2 — 오른쪽 기울어진 통계 -->
+    <div class="rotated-text-container" style="
+      position: absolute;
+      top: 7%;
+      right: 4%;
+      transform: rotate(10deg);
+      transform-origin: right;
+      font-family: 상상토끼 순악필여사 OTF;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    ">
+      <div style="background-color: transparent; color: #000000; padding: 10px 15px; font-size: 5.5rem; font-weight: 1000;">
+        정말 수많은 관련 영상이 존재하며,
+      </div>
+      <div style="background-color: transparent; color: #000000; padding: 10px 15px; font-size: 5.5rem; font-weight: 1000;">
+        심지어 이러한 영상들은 모두 사람들에게 <br> 인기 콘텐츠로 자리 잡고 있다.
+      </div>
+    </div>
+
+    <!-- 도대체 왜? -->
+    <div class="todaeche-text" style="
+      position: absolute;
+      bottom: 85%;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 5;
+    ">
+      <h2 style="
+        font-family: SM3견출명조;
+        font-weight: 900;
+        font-size: 330px;
+        color: #ffffff;
+        line-height: 1;
+        margin: -145px;
+        -webkit-text-stroke: 0px #000000;
+        paint-order: stroke fill;
+        animation: flicker 1.5s infinite;
+      ">
+        도대체<br>왜?
+      </h2>
+    </div>
+
+    <!-- 텍스트 3 — 우리가 이런 콘텐츠를 -->
+    <div class="rotated-text-container" style="
+      position: absolute;
+      top: 24.65%;
+      left: 0%;
+      transform: rotate(0deg);
+      font-family: 상상토끼 순악필여사 OTF;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    ">
+      <div style="background-color: white; color: black; padding: 0px 15px; font-size: 3.5rem; font-weight: 900;">
+        우리가 이런 콘텐츠를 계속 보게 되는
+      </div>
+    </div>
+
+    <!-- 텍스트 4 — 이유 1 제목 -->
+    <div class="rotated-text-container" style="
+      position: absolute;
+      top: 25%;
+      transform: rotate(0deg);
+      font-family: SM3견출명조;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    ">
+      <div style="background-color: transparent; color: black; padding: 0px 15px; font-size: 5.5rem; font-weight: 900;">
+        이유 1. 혐오 매력(Morbid Curiosity)
+      </div>
+    </div>
+
+    <!-- 텍스트 5 — 이유 1 본문 -->
+    <div class="rotated-text-container" style="
+      position: absolute;
+      top: 26%;
+      left: 10%;
+      transform: rotate(0deg);
+      font-family: SM3견출고딕;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    ">
+      <div style="background-color: transparent; color: black; padding: 0px 15px; font-size: 2.5rem; font-weight: 700;">
+        징그러운 것을 보면서도 멈추지 못하는 것은
+비정상이 아니다. 심리학자 Coltan Scrivner는 2021년 연구에서 혐오 매력을 '위협적인 상황에 대한 정보를 적극적으로 탐색하려는 성향'이라
+정의한다. 즉, 인간의 뇌는 위험을 피하기 위해
+오히려 그것을 직면하려 한다는 것이다. 수만 년 전 인류가 맹수의 사체를 들여다보며 위험을
+학습했던 것처럼, 오늘날 우리는 압출 영상을 보며 같은 일을 하고 있다. 혐오는 회피의 신호가
+아니라 학습의 신호다.
+      </div>
+    </div>
+
+    <!-- 텍스트 6 — 이상한 것이 아니다 (기울어진) -->
+    <div class="rotated-text-container" style="
+      position: absolute;
+      top: 27%;
+      left: 5%;
+      transform: rotate(35deg);
+      transform-origin: left top;
+      font-family: SM3견출명조;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    ">
+      <div style="background-color: transparent; color: yellow; padding: 10px 15px; font-size: 4.5rem; font-weight: 500;">
+        이상한 것이 아니다. 원래 그렇게 설계된 것이다.
+      </div>
+    </div>
+
+  </section>
+
+  <!-- 파티클 스크립트 -->
+  <script>
+  (function() {
+    const canvas  = document.getElementById('pop-canvas2');
+    const ctx     = canvas.getContext('2d');
+    const section = document.getElementById('wall-section');
+    const wrap    = document.getElementById('pimple-wrap');
+
+    function resize() {
+      canvas.width  = section.offsetWidth;
+      canvas.height = section.offsetHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const POP_AT = 0.65;
+    let particles = [];
+    let lastTime  = null;
+    let popped    = false;
+
+    function getPopOrigin() {
+      const wRect = section.getBoundingClientRect();
+      const pRect = wrap.getBoundingClientRect();
+      const cx = pRect.left - wRect.left + pRect.width * 0.5;
+      const cy = pRect.top  - wRect.top  + pRect.height * 0.30;
+      return { cx, cy };
+    }
+
+    function spawnParticles() {
+      const { cx, cy } = getPopOrigin();
+
+      for (let k = 0; k < 3; k++) {
+        particles.push({
+          x: cx + (Math.random()-0.5)*10,
+          y: cy,
+          vx: (Math.random()-0.5)*15,
+          vy: -(Math.random()*120+100),
+          size: 28+Math.random()*18,
+          color: '#FFF176',
+          alpha: 1, life: 1.6, elapsed: 0,
+          gravity: 12, spin: 0, angle: 0,
+          trail: [], isCore: true,
+        });
+      }
+
+      for (let i = 0; i < 120; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 130 + 50;
+        const isPus = Math.random() > 0.3;
+        const pusColors   = ['#FFE600','#FFD000','#FFC300','#FFEC60','#fff8a0','#ffe066'];
+        const bloodColors = ['#cc0000','#8B0000','#ff2200','#990000','#ff4400'];
+        particles.push({
+          x: cx + (Math.random()-0.5)*15,
+          y: cy,
+          vx: Math.cos(angle)*speed,
+          vy: Math.sin(angle)*speed - Math.random()*50,
+          size: isPus ? Math.random()*16+4 : Math.random()*8+2,
+          color: isPus
+            ? pusColors[Math.floor(Math.random()*pusColors.length)]
+            : bloodColors[Math.floor(Math.random()*bloodColors.length)],
+          alpha: 1,
+          life: Math.random()*0.7+0.25,
+          elapsed: 0,
+          gravity: Math.random()*10+8,
+          spin: (Math.random()-0.5)*15,
+          angle: Math.random()*Math.PI*2,
+          trail: [],
+          isCore: false,
+          isPus,
+        });
+      }
+    }
+
+    function update(dt) {
+      particles = particles.filter(p => p.alpha > 0.01);
+      for (const p of particles) {
+        p.trail.push({x: p.x, y: p.y, alpha: p.alpha});
+        if (p.trail.length > 6) p.trail.shift();
+        p.elapsed += dt;
+        const t = p.elapsed / p.life;
+        p.alpha = Math.max(0, 1 - t*t);
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.vy += p.gravity * dt * 60;
+        p.vx *= 0.97;
+        p.angle += p.spin * dt;
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (const p of particles) {
+        for (let i = 0; i < p.trail.length; i++) {
+          const t = p.trail[i];
+          const ratio = i / p.trail.length;
+          ctx.save();
+          ctx.globalAlpha = t.alpha * ratio * 0.35;
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(t.x, t.y, p.size * ratio * 0.7, 0, Math.PI*2);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        ctx.save();
+        ctx.globalAlpha = p.alpha;
+        ctx.translate(p.x, p.y);
+
+        if (p.isCore) {
+          const glow = ctx.createRadialGradient(0,0,0,0,0,p.size*2.5);
+          glow.addColorStop(0, 'rgba(255,240,100,0.5)');
+          glow.addColorStop(1, 'rgba(255,200,0,0)');
+          ctx.fillStyle = glow;
+          ctx.beginPath();
+          ctx.arc(0,0,p.size*2.5,0,Math.PI*2);
+          ctx.fill();
+
+          const body = ctx.createRadialGradient(-p.size*0.3,-p.size*0.3,0,0,0,p.size);
+          body.addColorStop(0,'#fffff0');
+          body.addColorStop(0.4,'#FFF176');
+          body.addColorStop(1,'#ccaa00');
+          ctx.fillStyle = body;
+          ctx.beginPath();
+          ctx.arc(0,0,p.size,0,Math.PI*2);
+          ctx.fill();
+
+        } else {
+          const body = ctx.createRadialGradient(
+            -p.size*0.2, -p.size*0.2, 0,
+            0, 0, p.size
+          );
+          body.addColorStop(0, 'rgba(255,255,220,0.9)');
+          body.addColorStop(0.5, p.color);
+          body.addColorStop(1, p.isPus ? '#997700' : '#550000');
+          ctx.fillStyle = body;
+          ctx.beginPath();
+          ctx.arc(0, 0, p.size, 0, Math.PI*2);
+          ctx.fill();
+        }
+
+        ctx.restore();
+      }
+    }
+
+    function loop(ts) {
+      if (!lastTime) lastTime = ts;
+      const dt = Math.min((ts - lastTime) / 1000, 0.05);
+      lastTime = ts;
+      const CYCLE = 2000;
+      const cycleTime = (ts % CYCLE) / CYCLE;
+
+      if (cycleTime >= POP_AT && cycleTime < POP_AT + 0.02 && !popped) {
+        spawnParticles();
+        popped = true;
+      }
+      if (cycleTime < POP_AT) popped = false;
+
+      update(dt);
+      draw();
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+  })();
+  </script>
+
+  <script>
+    // 팝업
+    const s = document.createElement("script");
+    s.src = "popup.js";
+    document.body.appendChild(s);
+  </script>
+
+</body>
+</html>
